@@ -29,7 +29,7 @@ st.markdown(
 
 # Colocando minhas informações no sidebar
 st.sidebar.markdown("<h1>Desenvolvido por:</h1>", unsafe_allow_html=True)
-st.sidebar.markdown("Thiago Regueira")
+st.sidebar.markdown("[Thiago Regueira](https://bento.me/thiagoregueira)")
 st.sidebar.subheader("Breve descrição do roboTICO:")
 st.sidebar.markdown(
     """
@@ -42,7 +42,6 @@ st.sidebar.markdown(
 )
 
 st.title("roboTICO - Seu TICO e TECO virtual!")
-
 
 # carregando a foto do bot
 chatbot_avatar = Image.open(os.path.join("images", "profile-pic.png"))
@@ -69,23 +68,23 @@ for message in st.session_state.messages:
         st.markdown(message["content"])
 
 
-# Processar e armazenar consulta e resposta
 def llm_function(query):
-    response = model.generate_content(query)
-
-    # Verifica se a resposta contém um número e, em caso afirmativo, converte-o em uma string
-    if isinstance(response.text, (int, float)):
-        response.text = str(response.text)
+    # Verifica se o input do usuário contém um número
+    if any(char.isdigit() for char in query):
+        response_text = "Infelizmente, Ainda não aprendi a mexer com números. Favor só enviar palavras."
+    else:
+        response = model.generate_content(query)
+        response_text = " ".join([part.text for part in response.parts])
 
     # Exibindo a mensagem do assistente com a foto do bot
     with st.chat_message("assistant", avatar=chatbot_avatar):
-        st.markdown(response.text, unsafe_allow_html=True)
+        st.markdown(response_text, unsafe_allow_html=True)
 
     # Armazenando a mensagem do usuário
     st.session_state.messages.append({"role": "user", "content": query})
 
     # Armazenando a mensagem do usuário
-    st.session_state.messages.append({"role": "assistant", "content": response.text})
+    st.session_state.messages.append({"role": "assistant", "content": response_text})
 
 
 # Aceita entrada do usuário
