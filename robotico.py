@@ -29,7 +29,7 @@ st.markdown(
 
 # Colocando minhas informações no sidebar
 st.sidebar.markdown("<h1>Desenvolvido por:</h1>", unsafe_allow_html=True)
-st.sidebar.markdown("[Thiago Regueira](https://bento.me/thiagoregueira)")
+st.sidebar.markdown("Thiago Regueira")
 st.sidebar.subheader("Breve descrição do roboTICO:")
 st.sidebar.markdown(
     """
@@ -72,6 +72,10 @@ for message in st.session_state.messages:
 # Processar e armazenar consulta e resposta
 def llm_function(query):
     response = model.generate_content(query)
+
+    # Verifica se a resposta contém um número e, em caso afirmativo, converte-o em uma string
+    if isinstance(response.text, (int, float)):
+        response.text = str(response.text)
 
     # Exibindo a mensagem do assistente com a foto do bot
     with st.chat_message("assistant", avatar=chatbot_avatar):
