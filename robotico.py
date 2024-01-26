@@ -68,6 +68,7 @@ for message in st.session_state.messages:
         st.markdown(message["content"])
 
 
+# Função para gerar respostas
 def llm_function(query):
     # Verifica se o input do usuário contém um número
     if any(char.isdigit() for char in query):
